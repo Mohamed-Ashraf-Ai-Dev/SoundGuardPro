@@ -21,8 +21,18 @@ android {
         }
     }
 
+    signingConfigs {
+        release {
+            storeFile file("../soundguard.jks")
+            storePassword "soundguard123"
+            keyAlias "soundguard"
+            keyPassword "soundguard123"
+        }
+    }
+
     buildTypes {
         release {
+            signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
