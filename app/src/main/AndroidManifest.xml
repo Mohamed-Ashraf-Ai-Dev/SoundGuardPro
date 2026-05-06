@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.manus.soundguardpro">
+    package="com.mohamedashraf.soundguardpro">
 
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.READ_CALL_LOG" />
@@ -14,7 +14,6 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="SoundGuard Pro"
-
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         

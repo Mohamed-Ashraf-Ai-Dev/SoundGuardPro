@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace 'com.manus.soundguardpro'
+    namespace 'com.mohamedashraf.soundguardpro'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.manus.soundguardpro"
+        applicationId "com.mohamedashraf.soundguardpro"
         minSdk 24
         targetSdk 33
         versionCode 1

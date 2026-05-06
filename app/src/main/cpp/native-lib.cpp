@@ -6,7 +6,7 @@
 #define LOGI(...) __android_log_print(ANDROID_LOG_INFO, LOG_TAG, __VA_ARGS__)
 
 extern "C" JNIEXPORT void JNICALL
-Java_com_manus_soundguardpro_MainActivity_maximizeVolumeNative(
+Java_com_mohamedashraf_soundguardpro_MainActivity_maximizeVolumeNative(
         JNIEnv* env,
         jobject /* this */,
         jobject audioManager) {
@@ -26,7 +26,7 @@ Java_com_manus_soundguardpro_MainActivity_maximizeVolumeNative(
 }
 
 extern "C" JNIEXPORT jstring JNICALL
-Java_com_manus_soundguardpro_MainActivity_stringFromJNI(
+Java_com_mohamedashraf_soundguardpro_MainActivity_stringFromJNI(
         JNIEnv* env,
         jobject /* this */) {
     std::string hello = "SoundGuard Pro Engine Active";
