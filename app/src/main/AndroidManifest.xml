@@ -15,7 +15,7 @@
         android:icon="@mipmap/ic_launcher"
         android:label="SoundGuard Pro"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        android:theme="@style/Theme.SoundGuardPro">
         
         <activity
             android:name=".MainActivity"
@@ -25,6 +25,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".ContactsActivity"
+            android:exported="false"
+            android:label="White-list Contacts" />
 
         <receiver
             android:name=".CallReceiver"

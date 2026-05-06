@@ -52,32 +52,56 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupUI() {
-        Switch guardSwitch = findViewById(R.id.guard_switch);
-        guardSwitch.setChecked(sharedPreferences.getBoolean("is_active", true));
+        com.google.android.material.switchmaterial.SwitchMaterial guardSwitch = findViewById(R.id.guard_switch);
+        final android.widget.ImageView statusIcon = findViewById(R.id.status_icon);
+        final android.widget.TextView statusText = findViewById(R.id.status_text);
+
+        boolean isActive = sharedPreferences.getBoolean("is_active", true);
+        guardSwitch.setChecked(isActive);
+        updateStatusUI(isActive, statusIcon, statusText);
+
         guardSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 sharedPreferences.edit().putBoolean("is_active", isChecked).apply();
+                updateStatusUI(isChecked, statusIcon, statusText);
                 Toast.makeText(MainActivity.this, isChecked ? "Guard Activated" : "Guard Deactivated", Toast.LENGTH_SHORT).show();
             }
         });
 
-        Button aboutButton = findViewById(R.id.btn_about);
-        aboutButton.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.btn_select_contacts).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, ContactsActivity.class));
+            }
+        });
+
+        findViewById(R.id.btn_about).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showAboutDialog();
             }
         });
 
-        ImageButton fbButton = findViewById(R.id.btn_facebook);
-        fbButton.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.btn_facebook).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.facebook.com/share/1EQP87fcmW/"));
                 startActivity(intent);
             }
         });
+    }
+
+    private void updateStatusUI(boolean isActive, android.widget.ImageView icon, android.widget.TextView text) {
+        if (isActive) {
+            icon.setImageResource(android.R.drawable.ic_lock_silent_mode_off);
+            icon.setColorFilter(ContextCompat.getColor(this, R.color.secondary));
+            text.setText("Guard is Active");
+        } else {
+            icon.setImageResource(android.R.drawable.ic_lock_silent_mode);
+            icon.setColorFilter(ContextCompat.getColor(this, R.color.error));
+            text.setText("Guard is Disabled");
+        }
     }
 
     private void showAboutDialog() {

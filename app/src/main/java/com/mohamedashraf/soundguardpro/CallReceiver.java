@@ -22,12 +22,26 @@ public class CallReceiver extends BroadcastReceiver {
         if (TelephonyManager.EXTRA_STATE_RINGING.equals(state)) {
             String incomingNumber = intent.getStringExtra(TelephonyManager.EXTRA_INCOMING_NUMBER);
             Log.i("SoundGuard", "Incoming call from: " + incomingNumber);
+
+            java.util.Set<String> whiteList = prefs.getStringSet("white_list", new java.util.HashSet<String>());
             
-            AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-            
-            // استدعاء الميثود من MainActivity (لاحظ أننا نحتاج لطريقة أفضل لاستدعاء الـ native method، 
-            // ولكن سنبقيها هكذا للتبسيط بما أنها كانت تعمل)
-            new MainActivity().maximizeVolumeNative(audioManager);
+            // If white list is empty, allow all. If not, only allow numbers in the list.
+            if (whiteList.isEmpty() || (incomingNumber != null && isNumberInWhiteList(incomingNumber, whiteList))) {
+                AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+                new MainActivity().maximizeVolumeNative(audioManager);
+            }
         }
+    }
+
+    private boolean isNumberInWhiteList(String incoming, java.util.Set<String> whiteList) {
+        // Simple normalization: remove non-digits
+        String normalizedIncoming = incoming.replaceAll("[^0-9]", "");
+        for (String whiteNumber : whiteList) {
+            String normalizedWhite = whiteNumber.replaceAll("[^0-9]", "");
+            if (normalizedIncoming.endsWith(normalizedWhite) || normalizedWhite.endsWith(normalizedIncoming)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
