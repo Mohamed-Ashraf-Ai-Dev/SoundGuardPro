@@ -21,22 +21,14 @@ jobs:
         distribution: 'temurin'
         cache: gradle
 
-    - name: Setup Gradle
-      uses: gradle/actions/setup-gradle@v3
-      with:
-        gradle-version: 7.5
-        cache-disabled: true
-
-    - name: Generate Gradle Wrapper
-      run: |
-        gradle wrapper --gradle-version 7.5
-        chmod +x gradlew
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
 
     - name: Build APK (Release)
-      run: ./gradlew assembleRelease --stacktrace --info --no-daemon
+      run: ./gradlew assembleRelease --stacktrace --no-daemon
 
     - name: Build Bundle (AAB)
-      run: ./gradlew bundleRelease --stacktrace --info --no-daemon
+      run: ./gradlew bundleRelease --stacktrace --no-daemon
 
     - name: Upload APK
       uses: actions/upload-artifact@v4
