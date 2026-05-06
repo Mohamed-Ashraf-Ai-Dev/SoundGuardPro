@@ -25,12 +25,13 @@ jobs:
       uses: gradle/actions/setup-gradle@v3
       with:
         gradle-version: 7.5
+        cache-disabled: true
 
     - name: Build APK (Release)
-      run: gradle assembleRelease
+      run: gradle assembleRelease --no-daemon
 
     - name: Build Bundle (AAB)
-      run: gradle bundleRelease
+      run: gradle bundleRelease --no-daemon
 
     - name: Upload APK
       uses: actions/upload-artifact@v4
