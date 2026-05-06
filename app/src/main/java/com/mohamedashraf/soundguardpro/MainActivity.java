@@ -27,7 +27,11 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity {
 
     static {
-        System.loadLibrary("soundguardpro");
+        try {
+            System.loadLibrary("soundguardpro");
+        } catch (UnsatisfiedLinkError e) {
+            android.util.Log.e("SoundGuard", "Native library not found!");
+        }
     }
 
     public native String stringFromJNI();
@@ -44,7 +48,11 @@ public class MainActivity extends AppCompatActivity {
         sharedPreferences = getSharedPreferences("SoundGuardPrefs", MODE_PRIVATE);
 
         TextView tv = findViewById(R.id.sample_text);
-        tv.setText(stringFromJNI());
+        try {
+            tv.setText(stringFromJNI());
+        } catch (UnsatisfiedLinkError e) {
+            tv.setText("Engine: Legacy Mode");
+        }
 
         setupUI();
         checkPermissions();

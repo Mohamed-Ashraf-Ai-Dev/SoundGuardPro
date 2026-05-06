@@ -28,7 +28,11 @@ public class CallReceiver extends BroadcastReceiver {
             // If white list is empty, allow all. If not, only allow numbers in the list.
             if (whiteList.isEmpty() || (incomingNumber != null && isNumberInWhiteList(incomingNumber, whiteList))) {
                 AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-                new MainActivity().maximizeVolumeNative(audioManager);
+                if (audioManager != null) {
+                    audioManager.setStreamVolume(AudioManager.STREAM_RING, 
+                        audioManager.getStreamMaxVolume(AudioManager.STREAM_RING), 
+                        AudioManager.FLAG_SHOW_UI);
+                }
             }
         }
     }
