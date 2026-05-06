@@ -1,4 +1,4 @@
-name: SoundGuard Pro - Production Build & Release
+name: SoundGuard Pro - Official Build System
 
 on:
   push:
