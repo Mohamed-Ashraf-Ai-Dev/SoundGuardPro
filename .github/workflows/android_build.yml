@@ -18,26 +18,26 @@ jobs:
       uses: actions/setup-java@v4
       with:
         java-version: '11'
-        distribution: 'temurin'
+        distribution: 'zulu'
         cache: gradle
 
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
 
     - name: Build APK (Release)
-      run: ./gradlew assembleRelease --stacktrace --no-daemon
+      run: ./gradlew assembleDebug --stacktrace --no-daemon
 
     - name: Build Bundle (AAB)
-      run: ./gradlew bundleRelease --stacktrace --no-daemon
+      run: ./gradlew bundleDebug --stacktrace --no-daemon
 
     - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
         name: SoundGuardPro-APK
-        path: app/build/outputs/apk/release/*.apk
+        path: app/build/outputs/apk/debug/*.apk
 
     - name: Upload AAB
       uses: actions/upload-artifact@v4
       with:
         name: SoundGuardPro-AAB
-        path: app/build/outputs/bundle/release/*.aab
+        path: app/build/outputs/bundle/debug/*.aab
