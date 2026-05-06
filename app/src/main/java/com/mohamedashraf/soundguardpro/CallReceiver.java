@@ -34,11 +34,22 @@ public class CallReceiver extends BroadcastReceiver {
     }
 
     private boolean isNumberInWhiteList(String incoming, java.util.Set<String> whiteList) {
+        if (incoming == null) return false;
         // Simple normalization: remove non-digits
         String normalizedIncoming = incoming.replaceAll("[^0-9]", "");
+        if (normalizedIncoming.isEmpty()) return false;
+
         for (String whiteNumber : whiteList) {
             String normalizedWhite = whiteNumber.replaceAll("[^0-9]", "");
-            if (normalizedIncoming.endsWith(normalizedWhite) || normalizedWhite.endsWith(normalizedIncoming)) {
+            if (normalizedWhite.isEmpty()) continue;
+
+            // Match if one is a suffix of the other (handles local vs international formats)
+            // Minimum length check to avoid false positives with very short numbers
+            if (normalizedIncoming.length() >= 7 && normalizedWhite.length() >= 7) {
+                if (normalizedIncoming.endsWith(normalizedWhite) || normalizedWhite.endsWith(normalizedIncoming)) {
+                    return true;
+                }
+            } else if (normalizedIncoming.equals(normalizedWhite)) {
                 return true;
             }
         }

@@ -1,7 +1,12 @@
 package com.mohamedashraf.soundguardpro;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +14,8 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -41,6 +48,25 @@ public class ContactsActivity extends AppCompatActivity {
         setupUI();
     }
 
+    private final ActivityResultLauncher<Intent> contactPickerLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                    Uri contactUri = result.getData().getData();
+                    String[] projection = new String[]{ContactsContract.CommonDataKinds.Phone.NUMBER};
+                    try (Cursor cursor = getContentResolver().query(contactUri, projection, null, null, null)) {
+                        if (cursor != null && cursor.moveToFirst()) {
+                            int numberIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
+                            String number = cursor.getString(numberIndex);
+                            addContact(number);
+                        }
+                    } catch (Exception e) {
+                        Toast.makeText(this, "Error picking contact", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+    );
+
     private void setupUI() {
         MaterialToolbar toolbar = findViewById(R.id.toolbar_contacts);
         toolbar.setNavigationOnClickListener(v -> finish());
@@ -53,6 +79,11 @@ public class ContactsActivity extends AppCompatActivity {
                 addContact(phone);
                 etPhone.setText("");
             }
+        });
+
+        findViewById(R.id.btn_pick_contact).setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.CommonDataKinds.Phone.CONTENT_URI);
+            contactPickerLauncher.launch(intent);
         });
 
         RecyclerView rv = findViewById(R.id.rv_contacts);

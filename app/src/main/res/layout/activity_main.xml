@@ -161,7 +161,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="20dp"
-                android:text="Engine Active"
+                android:text="Version 2.0"
                 android:textColor="@color/divider"
                 android:textSize="12sp" />
 

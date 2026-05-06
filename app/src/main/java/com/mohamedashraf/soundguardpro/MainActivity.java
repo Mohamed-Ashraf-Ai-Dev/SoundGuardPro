@@ -49,6 +49,33 @@ public class MainActivity extends AppCompatActivity {
         setupUI();
         checkPermissions();
         requestDoNotDisturbPermission();
+        requestNotificationPermission();
+        
+        if (sharedPreferences.getBoolean("is_active", true)) {
+            startGuardService();
+        }
+    }
+
+    private void startGuardService() {
+        Intent serviceIntent = new Intent(this, SoundGuardService.class);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(serviceIntent);
+        } else {
+            startService(serviceIntent);
+        }
+    }
+
+    private void stopGuardService() {
+        Intent serviceIntent = new Intent(this, SoundGuardService.class);
+        stopService(serviceIntent);
+    }
+
+    private void requestNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, 101);
+            }
+        }
     }
 
     private void setupUI() {
@@ -65,6 +92,11 @@ public class MainActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 sharedPreferences.edit().putBoolean("is_active", isChecked).apply();
                 updateStatusUI(isChecked, statusIcon, statusText);
+                if (isChecked) {
+                    startGuardService();
+                } else {
+                    stopGuardService();
+                }
                 Toast.makeText(MainActivity.this, isChecked ? "Guard Activated" : "Guard Deactivated", Toast.LENGTH_SHORT).show();
             }
         });
